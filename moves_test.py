@@ -110,6 +110,32 @@ TEST_BOARD2 = '     b   r       rr     r       '
 #    ---   ---   ---   ---
 TEST_BOARD3 = '                rrR     rrR  B  '
 
+# ---   ---   ---   ---
+# ---   ---   ---   ---
+# ---   ---   ---   ---
+#    ---   ---   ---   ---
+#    ---   ---   ---   ---
+#    ---   ---   ---   ---
+# ---   ---   ---   ---
+# ---   ---   ---   ---
+# ---   ---   ---   ---
+#    ---   ---   ---   ---
+#    ---   ---   ---   ---
+#    ---   ---   ---   ---
+# ---   ---   ---   ---
+# --- r --- r --- r ---
+# ---   ---   ---   ---
+#    ---   ---   ---   ---
+#    ---   ---   ---   ---
+#    ---   ---   ---   ---
+# ---   ---   ---   ---
+# --- r --- r ---   ---
+# ---   ---   ---   ---
+#    ---   ---   ---   ---
+#    --- B ---   ---   ---
+#    ---   ---   ---   ---
+TEST_BOARD4 = '                rrr     rr   B  '
+
 
 class MovesTest(unittest.TestCase):
     def test_children(self):
@@ -158,6 +184,11 @@ class MovesTest(unittest.TestCase):
                                [29, 24, 20, 16, 13, 17, 22, 18, 15], [29, 25, 22, 26, 31],
                                [29, 25, 22, 17, 13, 16, 20, 24, 29], [29, 25, 22, 18, 15]],
                               moves._jump_moves(TEST_BOARD3))
+        # An explicit test to make sure that the program does not jump the same checker more than once.  If it were
+        # able to jump position 25 twice, it would enable black to capture all five red checkers which doesn't happen,
+        self.assertItemsEqual([[29, 24, 20, 16, 13, 17, 22, 25, 29], [29, 24, 20, 16, 13, 17, 22, 18, 15],
+                               [29, 25, 22, 17, 13, 16, 20, 24, 29], [29, 25, 22, 18, 15]],
+                              moves._jump_moves(TEST_BOARD4))
 
     def test_continue_jump(self):
         self.assertItemsEqual([[5, 9, 14, 18, 23]], moves._continue_jump(TEST_BOARD1, [5, 9, 14]))
