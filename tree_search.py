@@ -8,7 +8,7 @@ __author__ = 'lhurd'
 
 NEGATIVE_INFINITY = -99999
 INFINITY = 99999
-INITIAL_DEPTH = 8
+INITIAL_DEPTH = 4
 
 
 def find_move(board, is_black):
@@ -30,7 +30,7 @@ def find_move(board, is_black):
     children = sorted(find_children(board), key=evaluate, reverse=True)
     for child in children:
         value = negamax(child, INITIAL_DEPTH, NEGATIVE_INFINITY, INFINITY)
-        if value > best_value:
+        if value >= best_value:
             best_value = value
             best_child = child
     if best_child and not is_black:
@@ -64,7 +64,7 @@ def negamax(board, depth, alpha, beta):
     best_value = NEGATIVE_INFINITY
     children = find_children(board)
     for child in children:
-        value = negamax(flip(child), depth - 1, -beta, -alpha)
+        value = - negamax(flip(child), depth - 1, -beta, -alpha)
         best_value = max(best_value, value)
         alpha = max(alpha, value)
         if alpha > beta:
@@ -73,20 +73,17 @@ def negamax(board, depth, alpha, beta):
 
 
 if __name__ == '__main__':
+    bd = flip('bbbbbbbbb----b----r-rr--rr-rrrBr'.replace('-', ' '))
+    print negamax(bd, INITIAL_DEPTH, NEGATIVE_INFINITY, INFINITY)
     logging.basicConfig(level=logging.DEBUG)
-    cumulative = 0
-    for tests in range(500):
-        bd = STARTING_BOARD
-        black = True
-        for i in range(50):
-            # print 'Move %d' % i
-            bd = find_move(bd, black)
-            if bd:
-                cumulative += evaluate(bd)
-            else:
-                print '%s wins.' % ('black' if black else 'red')
-                break
-            black = not black
-            print bd
-            # print_board(bd)
-        print cumulative
+    bd = STARTING_BOARD
+    black = True
+    i = 0
+    while bd:
+        bd = find_move(bd, black)
+        if not bd:
+            print '%s wins.' % ('red' if black else 'black')
+            break
+        black = not black
+        i += 1
+        print '%3d %s' % (i, bd)
