@@ -21,6 +21,8 @@ def find_move(board, is_black):
     Returns:
       The best move or None if the game has been lost.
     """
+    # The UI uses the convention that unused spaces are '-'.
+    board = board.replace('-', ' ')
     if not is_black:
         board = flip(board)
     best_child = None
@@ -32,9 +34,10 @@ def find_move(board, is_black):
             best_value = value
             best_child = child
     if best_child and not is_black:
-        return flip(best_child)
+        result = flip(best_child)
     else:
-        return best_child
+        result = best_child
+    return result.replace(' ', '-')
 
 
 def negamax(board, depth, alpha, beta):
@@ -82,5 +85,6 @@ if __name__ == '__main__':
                 print '%s wins.' % ('black' if black else 'red')
                 break
             black = not black
+            print bd
             # print_board(bd)
         print cumulative
