@@ -53,19 +53,7 @@ BWD_JUMPS = ((8, 5, 1), (9, 5, 0), (9, 6, 2), (10, 6, 1), (10, 7, 3),
              (31, 26, 22))
 
 
-def children(board, player_is_black):
-    if not player_is_black:
-        board = _flip(board)
-    boards = [_apply_jump(board, m) for m in _jump_moves(board)]
-    if not boards:
-        boards = [_apply_move(board, m) for m in _normal_moves(board)]
-    if player_is_black:
-        return boards
-    else:
-        return [_flip(b) for b in boards]
-
-
-def _flip(board):
+def flip(board):
     """Flip player whose turn it is so we can always look at things from
     black's point of view.
 
@@ -76,6 +64,13 @@ def _flip(board):
      flipped board.
     """
     return board.translate(TABLE)[::-1]
+
+
+def find_children(board):
+    boards = [_apply_jump(board, m) for m in _jump_moves(board)]
+    if not boards:
+        boards = [_apply_move(board, m) for m in _normal_moves(board)]
+    return boards
 
 
 #
@@ -121,6 +116,26 @@ def _apply_move(board, move):
 #
 # Logic for jump moves.
 #
+def has_jump(board):
+    """Takes in a board string and returns a boolean if black has a jump.
+
+    Args:
+      board: board string
+
+    Returns:
+      True if black has a jump..
+    """
+    for t in FWD_JUMPS:
+        if (board[t[0]].lower() == 'b' and board[t[1]].lower() == 'r'
+            and board[t[2]] == ' '):
+            return True
+    for t in BWD_JUMPS:
+        if (board[t[0]] == 'B' and board[t[1]].lower() == 'r'
+            and board[t[2]] == ' '):
+            return True
+    return False
+
+
 def _jump_moves(board):
     """Takes in a board string and return a set of tuples representing
     legal jump moves.  It returns a list of the path of the checker and

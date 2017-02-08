@@ -9,6 +9,7 @@ better for black.
 
 __author__ = 'lhurd'
 
+import random
 
 # Almost the simplest possible evaluation function.  We use the heuristic
 # that a king is worth 3/2 of a normal checker, a ratio cited in the book
@@ -17,6 +18,7 @@ __author__ = 'lhurd'
 # the main goal of his project will be making this function smarter.  For
 # example, in this simple form the program cannot decide between sequences
 # that do not have a capture.
+
 
 # The calling code is supposed to have accounted for the cases where the
 # move is a  win for one player or a draw.
@@ -30,5 +32,5 @@ def evaluate(board):
         an integer which is positive if black has te upper hand (negative
         for red).
     """
-    return 3 * board.count('B') + 2 * board.count('b') - 3 * board.count('R') \
-           - 2 * board.count('r')
+    return (30 * board.count('B') + 20 * board.count('b') - 30
+            * board.count('R') - 20 * board.count('r') + random.randint(0, 9))

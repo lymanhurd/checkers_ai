@@ -147,30 +147,18 @@ class MovesTest(unittest.TestCase):
                                'bbbbbbbbbb b  b     rrrrrrrrrrrr',
                                'bbbbbbbbbb b   b    rrrrrrrrrrrr',
                                'bbbbbbbbbbb    b    rrrrrrrrrrrr'],
-                              moves.children(STARTING_BOARD, True))
-        self.assertItemsEqual(['bbbbbbbbbbbb       rrrr rrrrrrrr',
-                               'bbbbbbbbbbbb      r rrr rrrrrrrr',
-                               'bbbbbbbbbbbb      r rr rrrrrrrrr',
-                               'bbbbbbbbbbbb     r  rr rrrrrrrrr',
-                               'bbbbbbbbbbbb     r  r rrrrrrrrrr',
-                               'bbbbbbbbbbbb    r   r rrrrrrrrrr',
-                               'bbbbbbbbbbbb    r    rrrrrrrrrrr'],
-                              moves.children(STARTING_BOARD, False))
+                              moves.find_children(STARTING_BOARD))
         self.assertItemsEqual(['               b     b br r   B ',
                                '     b   r           b  r     BB',
                                '     b   r     b  r       r B B ',
                                '     b   r    Bb     b  r       '],
-                              moves.children(TEST_BOARD1, True))
-        self.assertItemsEqual(['     b   r     b rr       r   B ',
-                               '     b   r r         b  r r   B ',
-                               'R              b  r  b  r r   B '],
-                              moves.children(TEST_BOARD1, False))
+                              moves.find_children(TEST_BOARD1))
 
     def test_flip(self):
         self.assertEqual('bbbb    bbbb        rrrrrrrrrrrr',
-                         moves._flip('bbbbbbbbbbbb        rrrr    rrrr'))
+                         moves.flip('bbbbbbbbbbbb        rrrr    rrrr'))
         self.assertEqual('BBBB    BBBB        RRRRRRRRRRRR',
-                         moves._flip('BBBBBBBBBBBB        RRRR    RRRR'))
+                         moves.flip('BBBBBBBBBBBB        RRRR    RRRR'))
 
     def test_normal_moves(self):
         self.assertItemsEqual([(5, 8), (15, 19), (21, 25), (30, 25)],
