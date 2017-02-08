@@ -37,7 +37,9 @@ def find_move(board, is_black):
         result = flip(best_child)
     else:
         result = best_child
-    return result.replace(' ', '-')
+    if result:
+        result = result.replace(' ', '-')
+    return result
 
 
 def negamax(board, depth, alpha, beta):
