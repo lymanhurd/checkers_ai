@@ -9,8 +9,6 @@ better for black.
 
 __author__ = 'lhurd'
 
-import random
-
 # Almost the simplest possible evaluation function.  We use the heuristic
 # that a king is worth 3/2 of a normal checker, a ratio cited in the book
 # Blondie24 (alongside the explanation that they were not using this
@@ -33,4 +31,4 @@ def evaluate(board):
         for red).
     """
     return (30 * board.count('B') + 20 * board.count('b') - 30
-            * board.count('R') - 20 * board.count('r') + random.randint(0, 9))
+            * board.count('R') - 20 * board.count('r'))

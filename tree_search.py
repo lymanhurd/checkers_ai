@@ -1,3 +1,4 @@
+import random
 import logging
 
 from evaluate import evaluate
@@ -26,13 +27,18 @@ def find_move(board, is_black):
     if not is_black:
         board = flip(board)
     best_child = None
+    best_children = []
     best_value = NEGATIVE_INFINITY
-    children = sorted(find_children(board), key=evaluate, reverse=True)
-    for child in children:
+    for child in find_children(board):
         value = negamax(child, INITIAL_DEPTH, NEGATIVE_INFINITY, INFINITY)
+        if value > best_value:
+            best_children = []
         if value >= best_value:
             best_value = value
-            best_child = child
+            best_children.append(child)
+    # If there are ties, choose randomly from among the tied choices.
+    if best_children:
+        best_child = best_children[random.randint(0, len(best_children) - 1)]
     if best_child and not is_black:
         result = flip(best_child)
     else:
@@ -62,7 +68,7 @@ def negamax(board, depth, alpha, beta):
     if depth <= 0 and not has_jump(board):
         return evaluate(board)
     best_value = NEGATIVE_INFINITY
-    children = find_children(board)
+    children = sorted(find_children(board), key=evaluate, reverse=True)
     for child in children:
         value = - negamax(flip(child), depth - 1, -beta, -alpha)
         best_value = max(best_value, value)
@@ -73,8 +79,6 @@ def negamax(board, depth, alpha, beta):
 
 
 if __name__ == '__main__':
-    bd = flip('bbbbbbbbb----b----r-rr--rr-rrrBr'.replace('-', ' '))
-    print negamax(bd, INITIAL_DEPTH, NEGATIVE_INFINITY, INFINITY)
     logging.basicConfig(level=logging.DEBUG)
     bd = STARTING_BOARD
     black = True
