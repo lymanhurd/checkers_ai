@@ -31,9 +31,9 @@ import unittest
 #    ---   ---   ---   ---
 #  r --- r --- r --- r ---
 #    ---   ---   ---   ---
-STARTING_BOARD = 'bbbbbbbbbbbb        rrrrrrrrrrrr'
+STARTING_BOARD = 'bbbbbbbbbbbb--------rrrrrrrrrrrr'
 
-# ---   ---   ---   ---
+# ----   ---   ---   ---
 # ---   ---   ---   ---
 # ---   ---   ---   ---
 #    ---   ---   ---   ---
@@ -57,7 +57,7 @@ STARTING_BOARD = 'bbbbbbbbbbbb        rrrrrrrrrrrr'
 #    ---   ---   ---   ---
 #    ---   --- B ---   ---
 #    ---   ---   ---   ---
-TEST_BOARD1 = '     b   r     b  r  b  r r   B '
+TEST_BOARD1 = '-----b---r-----b--r--b--r-r---B-'
 
 # ---   ---   ---   ---
 # ---   ---   ---   ---
@@ -83,7 +83,7 @@ TEST_BOARD1 = '     b   r     b  r  b  r r   B '
 #    ---   ---   ---   ---
 #    ---   ---   ---   ---
 #    ---   ---   ---   ---
-TEST_BOARD2 = '     b   r       rr     r       '
+TEST_BOARD2 = '-----b---r-------rr-----r-------'
 
 # ---   ---   ---   ---
 # ---   ---   ---   ---
@@ -109,7 +109,7 @@ TEST_BOARD2 = '     b   r       rr     r       '
 #    ---   ---   ---   ---
 #    --- B ---   ---   ---
 #    ---   ---   ---   ---
-TEST_BOARD3 = '                rrR     rrR  B  '
+TEST_BOARD3 = '----------------rrR-----rrR--B--'
 
 # ---   ---   ---   ---
 # ---   ---   ---   ---
@@ -135,30 +135,30 @@ TEST_BOARD3 = '                rrR     rrR  B  '
 #    ---   ---   ---   ---
 #    --- B ---   ---   ---
 #    ---   ---   ---   ---
-TEST_BOARD4 = '                rrr     rr   B  '
+TEST_BOARD4 = '----------------rrr-----rr---B--'
 
 
 class MovesTest(unittest.TestCase):
     def test_children(self):
-        self.assertItemsEqual(['bbbbbbbb bbbb       rrrrrrrrrrrr',
-                               'bbbbbbbb bbb b      rrrrrrrrrrrr',
-                               'bbbbbbbbb bb b      rrrrrrrrrrrr',
-                               'bbbbbbbbb bb  b     rrrrrrrrrrrr',
-                               'bbbbbbbbbb b  b     rrrrrrrrrrrr',
-                               'bbbbbbbbbb b   b    rrrrrrrrrrrr',
-                               'bbbbbbbbbbb    b    rrrrrrrrrrrr'],
+        self.assertItemsEqual(['bbbbbbbb-bbbb-------rrrrrrrrrrrr',
+                               'bbbbbbbb-bbb-b------rrrrrrrrrrrr',
+                               'bbbbbbbbb-bb-b------rrrrrrrrrrrr',
+                               'bbbbbbbbb-bb--b-----rrrrrrrrrrrr',
+                               'bbbbbbbbbb-b--b-----rrrrrrrrrrrr',
+                               'bbbbbbbbbb-b---b----rrrrrrrrrrrr',
+                               'bbbbbbbbbbb----b----rrrrrrrrrrrr'],
                               moves.find_children(STARTING_BOARD))
-        self.assertItemsEqual(['               b     b br r   B ',
-                               '     b   r           b  r     BB',
-                               '     b   r     b  r       r B B ',
-                               '     b   r    Bb     b  r       '],
+        self.assertItemsEqual(['---------------b-----b-br-r---B-',
+                               '-----b---r-----------b--r-----BB',
+                               '-----b---r-----b--r-------r-B-B-',
+                               '-----b---r----Bb-----b--r-------'],
                               moves.find_children(TEST_BOARD1))
 
     def test_flip(self):
-        self.assertEqual('bbbb    bbbb        rrrrrrrrrrrr',
-                         moves.flip('bbbbbbbbbbbb        rrrr    rrrr'))
-        self.assertEqual('BBBB    BBBB        RRRRRRRRRRRR',
-                         moves.flip('BBBBBBBBBBBB        RRRR    RRRR'))
+        self.assertEqual('bbbb----bbbb--------rrrrrrrrrrrr',
+                         moves.flip('bbbbbbbbbbbb--------rrrr----rrrr'))
+        self.assertEqual('BBBB----BBBB--------RRRRRRRRRRRR',
+                         moves.flip('BBBBBBBBBBBB--------RRRR----RRRR'))
 
     def test_normal_moves(self):
         self.assertItemsEqual([(5, 8), (15, 19), (21, 25), (30, 25)],
@@ -166,23 +166,23 @@ class MovesTest(unittest.TestCase):
 
     def test_apply_move(self):
         # forward move (normal checker).
-        self.assertEqual('bbbbbbbbb bb  b     rrrrrrrrrrrr',
+        self.assertEqual('bbbbbbbbb-bb--b-----rrrrrrrrrrrr',
                          moves._apply_move(STARTING_BOARD, (9, 14)))
         # forward move (normal checker with promotion).
-        self.assertEqual('    rrrr                 bbb B  ',
-                         moves._apply_move('    rrrr                bbbb    ',
+        self.assertEqual('----rrrr-----------------bbb-B--',
+                         moves._apply_move('----rrrr----------------bbbb----',
                                            (24, 29)))
         # forward move (king).
-        self.assertEqual('bbbbbbbbb bb  B     rrrrrrrrrrrr',
-                         moves._apply_move('bbbbbbbbbBbb        rrrrrrrrrrrr',
+        self.assertEqual('bbbbbbbbb-bb--B-----rrrrrrrrrrrr',
+                         moves._apply_move('bbbbbbbbbBbb--------rrrrrrrrrrrr',
                                            (9, 14)))
         # forward move (king) to last rank.
-        self.assertEqual('    rrrr                 bbb B  ',
-                         moves._apply_move('    rrrr                Bbbb    ',
+        self.assertEqual('----rrrr-----------------bbb-B--',
+                         moves._apply_move('----rrrr----------------Bbbb----',
                                            (24, 29)))
         # backward move (king).
-        self.assertEqual('    rrrr                Bbbb    ',
-                         moves._apply_move('    rrrr                 bbb B  ',
+        self.assertEqual('----rrrr----------------Bbbb----',
+                         moves._apply_move('----rrrr-----------------bbb-B--',
                                            (29, 24)))
 
     def test_jump_moves(self):
@@ -226,16 +226,16 @@ class MovesTest(unittest.TestCase):
 
     def test_apply_jump(self):
         # forward jump (normal checker).
-        self.assertEqual('              bb  r  b  r r   B ',
+        self.assertEqual('--------------bb--r--b--r-r---B-',
                          moves._apply_jump(TEST_BOARD1, (5, 9, 14)))
         # forward jump (normal checker with promotion).
-        self.assertEqual('     b   r     b  r       r B B ',
+        self.assertEqual('-----b---r-----b--r-------r-B-B-',
                          moves._apply_jump(TEST_BOARD1, (21, 24, 28)))
         # forward multiple jump (normal checker with promotion).
-        self.assertEqual('     b   r           b  r     BB',
+        self.assertEqual('-----b---r-----------b--r-----BB',
                          moves._apply_jump(TEST_BOARD1, (15, 18, 22, 26, 31)))
         # backward jump (king).
-        self.assertEqual('     b   r    Bb     b  r       ',
+        self.assertEqual('-----b---r----Bb-----b--r-------',
                          moves._apply_jump(TEST_BOARD1, (30, 26, 23, 18, 14)))
 
 

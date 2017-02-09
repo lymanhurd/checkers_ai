@@ -88,9 +88,9 @@ def _normal_moves(board):
       list of tuples giving start and finish coordinates
     """
     fwd = [t for t in FWD_MOVES if board[t[0]].lower() == 'b'
-           and board[t[1]] == ' ']
+           and board[t[1]] == '-']
     bwd = [t for t in BWD_MOVES if board[t[0]] == 'B'
-           and board[t[1]] == ' ']
+           and board[t[1]] == '-']
     return fwd + bwd
 
 
@@ -109,7 +109,7 @@ def _apply_move(board, move):
     board_list[move[1]] = board_list[move[0]]
     if move[1] > 27:  # King the piece if necessary.
         board_list[move[1]] = board_list[move[1]].upper()
-    board_list[move[0]] = ' '
+    board_list[move[0]] = '-'
     return ''.join(board_list)
 
 
@@ -127,11 +127,11 @@ def has_jump(board):
     """
     for t in FWD_JUMPS:
         if (board[t[0]].lower() == 'b' and board[t[1]].lower() == 'r'
-            and board[t[2]] == ' '):
+            and board[t[2]] == '-'):
             return True
     for t in BWD_JUMPS:
         if (board[t[0]] == 'B' and board[t[1]].lower() == 'r'
-            and board[t[2]] == ' '):
+            and board[t[2]] == '-'):
             return True
     return False
 
@@ -150,9 +150,9 @@ def _jump_moves(board):
       list of tuples giving path of checker and jumped locations.
     """
     fwd = [t for t in FWD_JUMPS if board[t[0]].lower() == 'b'
-           and board[t[1]].lower() == 'r' and board[t[2]] == ' ']
+           and board[t[1]].lower() == 'r' and board[t[2]] == '-']
     bwd = [t for t in BWD_JUMPS if board[t[0]] == 'B'
-           and board[t[1]].lower() == 'r' and board[t[2]] == ' ']
+           and board[t[1]].lower() == 'r' and board[t[2]] == '-']
     single_jumps = fwd + bwd
     jumps = []
     for j in single_jumps:
@@ -178,14 +178,14 @@ def _continue_jump(board, jump_list):
     jumped = set(jump_list[1::2])  # checkers that have already been jumped
     for t in FWD_JUMPS:
         if (t[0] == jump_list[-1]
-            and (board[t[2]] == ' ' or t[2] == jump_list[0])
+            and (board[t[2]] == '-' or t[2] == jump_list[0])
             and t[1] not in jumped and board[t[1]].lower() == 'r'):
             continuations += _continue_jump(board, jump_list + [t[1], t[2]])
     # if piece is a king, check for backward continuations
     if board[jump_list[0]] == 'B':
         for t in BWD_JUMPS:
             if (t[0] == jump_list[-1]
-                and (board[t[2]] == ' ' or t[2] == jump_list[0])
+                and (board[t[2]] == '-' or t[2] == jump_list[0])
                 and t[1] not in jumped
                 and board[t[1]].lower() == 'r'):
                 continuations += _continue_jump(board, jump_list
@@ -211,10 +211,10 @@ def _apply_jump(board, move):
     board_list[move[-1]] = board_list[move[0]]
     if move[-1] > 27:  # King the piece if necessary.
         board_list[move[-1]] = board_list[move[-1]].upper()
-    board_list[move[0]] = ' '
+    board_list[move[0]] = '-'
     # remove the jumped checkers
     for i in move[1::2]:
-        board_list[i] = ' '
+        board_list[i] = '-'
     return ''.join(board_list)
 
 
@@ -224,6 +224,7 @@ def print_board(board):
     Args:
         board: board string.
     """
+    board = board.replace('-', ' ')
     for r in range(0, 32, 8):
         print '# ---   ---   ---   ---   '
         print '# --- %s --- %s --- %s --- %s ' % (board[r], board[r + 1],

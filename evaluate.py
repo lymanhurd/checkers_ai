@@ -18,6 +18,10 @@ __author__ = 'lhurd'
 # that do not have a capture.
 
 
+NEGATIVE_INFINITY = -99999
+INFINITY = 99999
+
+
 # The calling code is supposed to have accounted for the cases where the
 # move is a  win for one player or a draw.
 def evaluate(board):
@@ -30,5 +34,11 @@ def evaluate(board):
         an integer which is positive if black has te upper hand (negative
         for red).
     """
-    return (30 * board.count('B') + 20 * board.count('b') - 30
-            * board.count('R') - 20 * board.count('r'))
+    bcount = 30 * board.count('B') + 20 * board.count('b')
+    if bcount == 0:
+        return NEGATIVE_INFINITY
+    rcount = 30 * board.count('R') + 20 * board.count('r')
+    if rcount == 0:
+        return INFINITY
+    else:
+        return bcount - rcount
