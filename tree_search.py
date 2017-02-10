@@ -9,7 +9,7 @@ __author__ = 'lhurd'
 
 NEGATIVE_INFINITY = -99999
 INFINITY = 99999
-INITIAL_DEPTH = 5
+INITIAL_DEPTH = 8
 
 
 def find_move(board, is_black):
@@ -72,7 +72,7 @@ def negamax(board, depth, alpha, beta):
         value = negamax(child, depth - 1, -beta, -alpha)
         best_value = max(best_value, value)
         alpha = max(alpha, value)
-        if alpha > beta:
+        if alpha >= beta:
             break
     return -best_value
 
