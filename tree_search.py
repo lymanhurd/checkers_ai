@@ -44,6 +44,7 @@ def find_move(board, is_black):
         result = flip(best_child)
     else:
         result = best_child
+    logging.info('Input %s Is Black %s Output %s' % (board, is_black, result))
     return result
 
 
